@@ -1,0 +1,23 @@
+from setuptools import setup, find_packages
+
+setup(
+    name="rest-detector-agent",
+    version="0.1.0",
+    packages=find_packages(),
+    install_requires=[
+        'opencv-python>=4.8.0',
+        'ultralytics>=8.0.0',
+        'deepface>=0.0.75',
+        'numpy>=1.24.0',
+        'Pillow>=10.0.0',
+        'click>=8.1.0',
+        'tensorflow>=2.8.0',
+        'tensorflow-hub>=0.14.0',
+        'keras>=2.8.0',
+        'fastapi[all]>=0.104.0',
+        'uvicorn>=0.24.0',
+        'requests>=2.31.0',
+        'tqdm>=4.66.0',
+        'scipy>=1.11.0'
+    ],
+) 

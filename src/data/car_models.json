@@ -1,0 +1,55 @@
+{
+    "sedan": {
+        "Acura": ["ILX", "TLX", "RLX"],
+        "Audi": ["A3", "A4", "A6", "A8", "RS7"],
+        "BMW": ["1 Series", "2 Series", "3 Series", "5 Series", "7 Series", "M3", "M5"],
+        "Chevrolet": ["Malibu", "Impala", "Cruze", "Sonic"],
+        "Honda": ["Civic", "Accord", "Insight"],
+        "Hyundai": ["Elantra", "Sonata", "Genesis"],
+        "Lexus": ["IS", "ES", "GS", "LS"],
+        "Mercedes-Benz": ["C-Class", "E-Class", "S-Class", "CLA", "CLS"],
+        "Toyota": ["Corolla", "Camry", "Avalon"],
+        "Volkswagen": ["Jetta", "Passat", "Arteon"]
+    },
+    "suv": {
+        "Acura": ["RDX", "MDX"],
+        "Audi": ["Q3", "Q5", "Q7", "Q8"],
+        "BMW": ["X1", "X3", "X5", "X7"],
+        "Chevrolet": ["Equinox", "Traverse", "Tahoe", "Suburban"],
+        "Honda": ["CR-V", "HR-V", "Pilot", "Passport"],
+        "Hyundai": ["Tucson", "Santa Fe", "Palisade"],
+        "Lexus": ["UX", "NX", "RX", "GX", "LX"],
+        "Mercedes-Benz": ["GLA", "GLC", "GLE", "GLS", "G-Class"],
+        "Toyota": ["RAV4", "Highlander", "4Runner", "Land Cruiser"],
+        "Volkswagen": ["Tiguan", "Atlas", "ID.4"]
+    },
+    "sports": {
+        "Aston Martin": ["DB9", "Vantage", "DBS"],
+        "Audi": ["R8", "TT", "RS5"],
+        "BMW": ["M2", "M4", "i8", "Z4"],
+        "Chevrolet": ["Corvette", "Camaro"],
+        "Ferrari": ["458 Italia", "488 GTB", "F12", "LaFerrari"],
+        "Lamborghini": ["Aventador", "Huracan", "Gallardo"],
+        "McLaren": ["570S", "720S", "P1"],
+        "Mercedes-Benz": ["AMG GT", "SL-Class", "SLS AMG"],
+        "Porsche": ["911", "Cayman", "Boxster", "918"],
+        "Tesla": ["Roadster"]
+    },
+    "pickup": {
+        "Chevrolet": ["Silverado", "Colorado"],
+        "Ford": ["F-150", "Ranger", "F-250", "F-350"],
+        "GMC": ["Sierra", "Canyon"],
+        "Honda": ["Ridgeline"],
+        "Jeep": ["Gladiator"],
+        "Nissan": ["Titan", "Frontier"],
+        "Ram": ["1500", "2500", "3500"],
+        "Toyota": ["Tacoma", "Tundra"]
+    },
+    "van": {
+        "Chrysler": ["Pacifica"],
+        "Honda": ["Odyssey"],
+        "Kia": ["Sedona"],
+        "Mercedes-Benz": ["Metris", "Sprinter"],
+        "Toyota": ["Sienna"]
+    }
+} 
