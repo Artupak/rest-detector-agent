@@ -77,13 +77,8 @@ YOLOv8 ve DeepFace kullanarak gerçek zamanlı nesne tespiti ve yüz analizi yap
 
 ## Kurulum
 
-1. Depoyu klonlayın:
-```bash
-git clone https://github.com/kullanıcıadınız/rest-detector-agent.git
-cd rest-detector-agent
-```
 
-2. Bağımlılıkları yükleyin:
+Bağımlılıkları yükleyin:
 ```bash
 pip install -r requirements.txt
 ```
