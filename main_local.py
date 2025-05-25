@@ -9,6 +9,18 @@ import os
 import signal
 import sys
 
+def check_display():
+    """Check if display is available for GUI windows"""
+    if platform.system() == 'Linux':
+        if os.environ.get('DISPLAY') is None:
+            print("HATA: X11 display bulunamadı. GUI penceresi gösterilemiyor.")
+            print("Çözüm için:")
+            print("1. X11 yüklü olduğundan emin olun")
+            print("2. DISPLAY değişkeninin ayarlı olduğunu kontrol edin")
+            print("3. SSH üzerinden çalışıyorsanız X11 forwarding aktif olmalı")
+            return False
+    return True
+
 def signal_handler(sig, frame):
     print("\nProgram kapatılıyor...")
     cv2.destroyAllWindows()
@@ -30,6 +42,10 @@ def get_system_info():
 def main():
     # Ctrl+C sinyalini yakala
     signal.signal(signal.SIGINT, signal_handler)
+    
+    # Display kontrolü
+    if not check_display():
+        sys.exit(1)
     
     parser = argparse.ArgumentParser(description='Local Object Detection')
     parser.add_argument('--camera-id', type=int, default=0, help='Camera device ID')
@@ -60,7 +76,7 @@ def main():
         # Kamera başlat
         cap = cv2.VideoCapture(args.camera_id)
         if not cap.isOpened():
-            raise Exception("Kamera açılamadı!")
+            raise Exception(f"Kamera açılamadı! ID: {args.camera_id}")
 
         # Kamera özelliklerini ayarla
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -75,6 +91,16 @@ def main():
 
         # Detector sınıfını başlat
         detector = LocalDetector()
+
+        # Ana pencereyi oluştur ve boyutlandır
+        window_name = 'Object Detection'
+        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(window_name, actual_width, actual_height)
+        
+        if platform.system() == 'Linux':
+            # Linux'ta pencere özelliklerini ayarla
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
 
         print("Program başlatıldı. Çıkmak için 'q' tuşuna basın.")
 
@@ -126,7 +152,11 @@ def main():
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
                 # Sonucu göster
-                cv2.imshow('Object Detection', processed_frame)
+                cv2.imshow(window_name, processed_frame)
+                
+                # Linux'ta pencere yenileme
+                if platform.system() == 'Linux':
+                    cv2.waitKey(1)  # Linux'ta pencere yenilemesi için gerekli
 
                 # 'q' tuşuna basılırsa çık
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -144,6 +174,10 @@ def main():
         if 'cap' in locals():
             cap.release()
         cv2.destroyAllWindows()
+        # Linux'ta pencere kapanmasını garantile
+        if platform.system() == 'Linux':
+            for i in range(5):
+                cv2.waitKey(1)
         print("\nProgram kapatıldı.")
 
 if __name__ == "__main__":
