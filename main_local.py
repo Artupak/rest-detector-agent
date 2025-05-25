@@ -53,6 +53,23 @@ def main():
     parser.add_argument('--resolution', type=str, default='480p', help='Video resolution (480p, 720p, 1080p)')
     args = parser.parse_args()
 
+    # Kamera cihazlarını kontrol et
+    if platform.system() == 'Linux':
+        try:
+            video_devices = [f for f in os.listdir('/dev') if f.startswith('video')]
+            if not video_devices:
+                print("HATA: Hiçbir kamera cihazı bulunamadı (/dev/video* yok)")
+                print("Çözüm önerileri:")
+                print("1. Kameranın bağlı olduğundan emin olun")
+                print("2. Kullanıcınızın video grubuna ekli olduğunu kontrol edin:")
+                print("   sudo usermod -a -G video $USER")
+                print("3. v4l2 sürücülerinin yüklü olduğunu kontrol edin:")
+                print("   sudo apt-get install v4l-utils")
+                sys.exit(1)
+            print(f"Bulunan kamera cihazları: {', '.join(video_devices)}")
+        except Exception as e:
+            print(f"HATA: Kamera cihazları kontrol edilirken hata oluştu: {str(e)}")
+
     # Çözünürlük ayarları
     resolutions = {
         '480p': (640, 480),
@@ -73,9 +90,20 @@ def main():
             print("GPU bulunamadı, CPU kullanılacak")
 
     try:
-        # Kamera başlat
+        print(f"Kamera {args.camera_id} açılıyor...")
         cap = cv2.VideoCapture(args.camera_id)
+        
         if not cap.isOpened():
+            if platform.system() == 'Linux':
+                print(f"\nKamera açma hatası detayları:")
+                print(f"1. Kamera ID: {args.camera_id}")
+                print(f"2. OpenCV sürümü: {cv2.__version__}")
+                print("3. Kamera erişim izinlerini kontrol edin:")
+                print("   ls -l /dev/video*")
+                print("\nÇözüm önerileri:")
+                print("1. Farklı bir kamera ID'si deneyin (--camera-id 1 veya 2)")
+                print("2. v4l2-ctl --list-devices komutunu çalıştırarak mevcut kameraları listeleyin")
+                print("3. sudo apt-get install v4l-utils ile video sürücülerini güncelleyin")
             raise Exception(f"Kamera açılamadı! ID: {args.camera_id}")
 
         # Kamera özelliklerini ayarla
