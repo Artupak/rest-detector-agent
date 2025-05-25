@@ -26,20 +26,6 @@ A high-performance, local-first object detection system that leverages YOLOv8 an
 - NVIDIA GPU with CUDA support
 - Apple Silicon Mac
 - Modern CPU (fallback option)
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/rest-detector-agent.git
-cd rest-detector-agent
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
 ## Usage
 
 Run the main application:
