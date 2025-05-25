@@ -51,6 +51,7 @@ def main():
     parser.add_argument('--camera-id', type=int, default=0, help='Camera device ID')
     parser.add_argument('--gpu', action='store_true', help='Force GPU usage if available')
     parser.add_argument('--resolution', type=str, default='480p', help='Video resolution (480p, 720p, 1080p)')
+    parser.add_argument('--save', action='store_true', help='Save video output')
     args = parser.parse_args()
 
     # Kamera cihazlarını kontrol et
@@ -117,18 +118,23 @@ def main():
         actual_fps = int(cap.get(cv2.CAP_PROP_FPS))
         print(f"Kamera Çözünürlüğü: {actual_width}x{actual_height} @ {actual_fps}fps")
 
+        # Video kaydı için ayarlar
+        if args.save:
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            out = cv2.VideoWriter('output.avi', fourcc, actual_fps, (actual_width, actual_height))
+
         # Detector sınıfını başlat
         detector = LocalDetector()
 
-        # Ana pencereyi oluştur ve boyutlandır
+        # Ana pencereyi oluştur
         window_name = 'Object Detection'
-        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-        cv2.resizeWindow(window_name, actual_width, actual_height)
-        
         if platform.system() == 'Linux':
-            # Linux'ta pencere özelliklerini ayarla
-            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
-            cv2.setWindowProperty(window_name, cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
+            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+            cv2.resizeWindow(window_name, actual_width, actual_height)
+            # Linux'ta tam ekran modunu dene
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+            # Pencereyi öne getir
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
 
         print("Program başlatıldı. Çıkmak için 'q' tuşuna basın.")
 
@@ -179,12 +185,17 @@ def main():
                 cv2.putText(processed_frame, system_stats, (10, 60),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
+                # Video kaydet
+                if args.save:
+                    out.write(processed_frame)
+
                 # Sonucu göster
                 cv2.imshow(window_name, processed_frame)
                 
-                # Linux'ta pencere yenileme
+                # Linux'ta pencere yenileme ve bekleme
                 if platform.system() == 'Linux':
                     cv2.waitKey(1)  # Linux'ta pencere yenilemesi için gerekli
+                    time.sleep(0.001)  # CPU kullanımını azalt
 
                 # 'q' tuşuna basılırsa çık
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -201,6 +212,8 @@ def main():
         # Temizlik
         if 'cap' in locals():
             cap.release()
+        if args.save and 'out' in locals():
+            out.release()
         cv2.destroyAllWindows()
         # Linux'ta pencere kapanmasını garantile
         if platform.system() == 'Linux':
