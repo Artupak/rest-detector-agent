@@ -50,7 +50,7 @@ def main():
     parser = argparse.ArgumentParser(description='Local Object Detection')
     parser.add_argument('--camera-id', type=int, default=0, help='Camera device ID')
     parser.add_argument('--gpu', action='store_true', help='Force GPU usage if available')
-    parser.add_argument('--resolution', type=str, default='480p', help='Video resolution (480p, 720p, 1080p)')
+    parser.add_argument('--resolution', type=str, default='720p', help='Video resolution (480p, 720p, 1080p)')
     parser.add_argument('--save', action='store_true', help='Save video output')
     args = parser.parse_args()
 
@@ -75,9 +75,14 @@ def main():
     resolutions = {
         '480p': (640, 480),
         '720p': (1280, 720),
-        '1080p': (1920, 1080)
+        '1080p': (1920, 1080),
+        'HD': (1920, 1080),  # Full HD
+        '2K': (2560, 1440),  # 2K
+        '4K': (3840, 2160)   # 4K
     }
-    width, height = resolutions.get(args.resolution, (640, 480))  # Varsayılan 480p
+    
+    # Varsayılan çözünürlüğü 720p yap
+    width, height = resolutions.get(args.resolution, resolutions['720p']) # args.resolution kullanılır veya varsayılan 720p
 
     # GPU kullanılabilirliğini kontrol et
     if args.gpu:
