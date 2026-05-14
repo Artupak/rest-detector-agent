@@ -1,102 +1,19 @@
-# Real-Time Object Detection Agent
-
-A high-performance, local-first object detection system that leverages YOLOv8 and DeepFace for real-time object detection and face analysis. The system automatically utilizes the best available hardware acceleration for optimal performance.
-
-## Features
-
-- **Real-time Object Detection**: Detects people, vehicles, and bicycles using YOLOv8
-- **Face Analysis**: Provides age and gender analysis for detected people using DeepFace
-- **Hardware Acceleration**:
-  - NVIDIA GPU (CUDA) support for maximum performance
-  - Apple Silicon (MPS) optimization for Mac users
-  - CPU fallback support
-- **Local Processing**: All processing happens locally without cloud dependencies
-- **High Performance**: 
-  - 13-15ms inference time on Apple Silicon
-  - Optimized CUDA performance with mixed precision and cuDNN
-
-## Requirements
-
-- Python 3.8+
-- PyTorch
-- OpenCV
-- Required packages listed in `requirements.txt`
-
-### Hardware Requirements (one of the following):
-- NVIDIA GPU with CUDA support
-- Apple Silicon Mac
-- Modern CPU (fallback option)
-## Usage
-
-Run the main application:
-```bash
-python main_local.py
-```
-
-The system will automatically detect and use the best available hardware acceleration:
-1. NVIDIA GPU (if available with CUDA)
-2. Apple Silicon GPU (if on compatible Mac)
-3. CPU (fallback option)
-
-## Performance
-
-- NVIDIA GPU: Optimized with CUDA, mixed precision, and cuDNN
-- Apple Silicon: 13-15ms inference time
-- CPU: 50-70ms inference time
-
----
-
-# Gerçek Zamanlı Nesne Algılama Ajanı
-
-YOLOv8 ve DeepFace kullanarak gerçek zamanlı nesne tespiti ve yüz analizi yapan, yüksek performanslı, yerel öncelikli bir nesne algılama sistemi. Sistem, optimal performans için otomatik olarak mevcut en iyi donanım hızlandırmasını kullanır.
-
-## Özellikler
-
-- **Gerçek Zamanlı Nesne Tespiti**: YOLOv8 kullanarak insan, araç ve bisiklet tespiti
-- **Yüz Analizi**: DeepFace kullanarak tespit edilen kişiler için yaş ve cinsiyet analizi
-- **Donanım Hızlandırma**:
-  - Maksimum performans için NVIDIA GPU (CUDA) desteği
-  - Mac kullanıcıları için Apple Silicon (MPS) optimizasyonu
-  - CPU yedek desteği
-- **Yerel İşleme**: Tüm işlemler bulut bağımlılığı olmadan yerel olarak gerçekleşir
-- **Yüksek Performans**: 
-  - Apple Silicon'da 13-15ms çıkarım süresi
-  - Karma hassasiyet ve cuDNN ile optimize edilmiş CUDA performansı
-
-## Gereksinimler
-
-- Python 3.8+
-- PyTorch
-- OpenCV
-- `requirements.txt` dosyasında listelenen gerekli paketler
-
-### Donanım Gereksinimleri (aşağıdakilerden biri):
-- CUDA destekli NVIDIA GPU
-- Apple Silicon Mac
-- Modern CPU (yedek seçenek)
-
-## Kurulum
-
-
-Bağımlılıkları yükleyin:
-```bash
-pip install -r requirements.txt
-```
-
-## Kullanım
-
-Ana uygulamayı çalıştırın:
-```bash
-python main_local.py
-```
-
-Sistem otomatik olarak mevcut en iyi donanım hızlandırmasını tespit edip kullanacaktır:
-1. NVIDIA GPU (CUDA ile kullanılabilir ise)
-2. Apple Silicon GPU (uyumlu Mac'te)
-3. CPU (yedek seçenek)
-
-## Performans
-
-- NVIDIA GPU: CUDA, karma hassasiyet ve cuDNN ile optimize edilmiş
-- Apple Silicon: 13-15ms çıkarım süresi
-- CPU: 50-70ms çıkarım süresi 
+Real-Time Object Detection Agent (rest-detector-agent)High-performance, local-first object detection and face analysis system. This agent is designed to run inference at the edge with automatic hardware acceleration discovery, ensuring maximum privacy and minimal latency without cloud dependencies.(Türkçe dokümantasyon aşağıdadır / Turkish documentation is below)Key FeaturesReal-Time Detection: Optimized YOLOv8 implementation for tracking people, vehicles, and bicycles.Face Analysis: Integrated DeepFace pipeline for instant age and gender estimation of detected individuals.Auto-Hardware Acceleration:NVIDIA GPU: Full CUDA & cuDNN optimization with Mixed Precision inference.Apple Silicon: Native MPS (Metal Performance Shaders) support for M1/M2/M3 chips.CPU Fallback: Optimized AVX/OpenMP execution for systems without dedicated GPUs.Local-First (Privacy Centric): All biometric and visual data is processed on-device. No external API calls are made.Performance MetricsTests conducted on a standard real-time video stream (640x480 resolution).HardwareBackendInference TimeTotal Pipeline LatencyApple Silicon (M2)MPS~13-15ms~45msNVIDIA RTX 3060CUDA~6-10ms~25msIntel i7 (12th Gen)CPU~50-70ms~120msInstallationClone the Repository:git clone https://github.com/Artupak/rest-detector-agent.git
+cd rest-detector-agent
+Set Up Environment:# Recommended: Use a virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# or
+.\\venv\\Scripts\\activate  # Windows
+Install Dependencies:pip install -r requirements.txt
+UsageRun the agent with the local detector script:python main_local.py
+The system will automatically initialize the most capable hardware found on the host machine in the following priority: CUDA > MPS > CPU.System ArchitectureThe agent operates through a sequential pipeline:Frame Capture: OpenCV handles the raw video stream I/O.Detection Layer: YOLOv8 (Small/Nano) identifies bounding boxes.Analysis Layer: Detected 'person' objects are cropped and passed to the DeepFace engine.Hardware Dispatcher: A custom abstraction layer maps PyTorch tensors to the optimal device (CUDA/MPS).Known Limitations & Lessons Learned (Developer Notes)This project was built to understand the end-to-end integration of deep learning models in edge environments. As a developer focused on architectural efficiency, I have identified the following bottlenecks in the current version and plan to address them in future iterations:[Current] Synchronous Pipeline Bottleneck: YOLO and DeepFace currently operate in a serial manner. On high-traffic streams, synchronous model inference causes frame-dropping and increases total pipeline latency.Next Step: Implement an Asynchronous Multi-threading/Multiprocessing architecture to decouple capture, detection, and analysis.[Current] Python GIL Constraints: The Python Global Interpreter Lock (GIL) limits true parallelism during high-load real-time video processing.Next Step: Port the core inference engine to C++ using hardware accelerators like TensorRT (NVIDIA) or OpenVINO (Intel) to bypass Python's I/O and processing bottlenecks.[Current] Memory Management: Continuous loading/unloading of face models in VRAM without a watchdog.Next Step: Implement a strict memory management system and persistent VRAM caching to prevent 'Out of Memory' (OOM) errors during continuous 24/7 runs.Gerçek Zamanlı Nesne ve Yüz Algılama Ajanı (rest-detector-agent)YOLOv8 ve DeepFace kullanarak gerçek zamanlı nesne tespiti ve yüz analizi yapan, yüksek performanslı, yerel öncelikli (local-first) bir yapay zeka ajanı. Sistem, bulut bağımlılığı olmadan maksimum gizlilik sağlamak ve optimum performans için cihazdaki en iyi donanım hızlandırıcısını otomatik olarak bulmak üzere tasarlanmıştır.Temel ÖzelliklerGerçek Zamanlı Tespit: İnsan, araç ve bisiklet takibi için optimize edilmiş YOLOv8 entegrasyonu.Yüz Analizi: Tespit edilen kişilerin anında yaş ve cinsiyet tahmini için DeepFace entegrasyonu.Otomatik Donanım Hızlandırma:NVIDIA GPU: Karma hassasiyet (Mixed Precision) çıkarımı ile tam CUDA ve cuDNN optimizasyonu.Apple Silicon: M1/M2/M3 çipleri için yerel MPS (Metal Performance Shaders) desteği.CPU Yedeklemesi: GPU olmayan sistemler için optimize edilmiş AVX/OpenMP çalışması.Yerel Çalışma (Gizlilik Odaklı): Tüm biyometrik ve görsel veriler cihaz üzerinde işlenir. Dışarıya hiçbir API isteği yapılmaz.Performans MetrikleriTestler standart bir gerçek zamanlı video akışında (640x480 çözünürlük) gerçekleştirilmiştir.DonanımAltyapıÇıkarım Süresi (Inference)Toplam Gecikme (Pipeline)Apple Silicon (M2)MPS~13-15ms~45msNVIDIA RTX 3060CUDA~6-10ms~25msIntel i7 (12. Nesil)CPU~50-70ms~120msKurulumRepoyu Klonlayın:git clone https://github.com/Artupak/rest-detector-agent.git
+cd rest-detector-agent
+Ortamı Hazırlayın:# Sanal ortam kullanılması önerilir
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# veya
+.\\venv\\Scripts\\activate  # Windows
+Bağımlılıkları Yükleyin:pip install -r requirements.txt
+KullanımAjanı yerel tespit script'i ile çalıştırın:python main_local.py
+Sistem, makinede bulunan en yetenekli donanımı şu öncelik sırasına göre otomatik olarak başlatacaktır: CUDA > MPS > CPU.Sistem MimarisiAjan ardışık bir işlem hattı (pipeline) üzerinden çalışır:Kare Yakalama (Frame Capture): OpenCV ham video akışını (I/O) yönetir.Tespit Katmanı (Detection Layer): YOLOv8 nesne sınır kutularını (bounding boxes) belirler.Analiz Katmanı (Analysis Layer): Tespit edilen 'insan' nesneleri kırpılır ve DeepFace motoruna iletilir.Donanım Yönlendiricisi (Hardware Dispatcher): Özel bir soyutlama katmanı, PyTorch tensörlerini en uygun cihaza (CUDA/MPS) yönlendirir.Bilinen Kısıtlamalar ve Gelecek Mimarisi (Geliştirici Notları)Bu proje, derin öğrenme (deep learning) modellerinin uç cihazlarda (edge) uçtan uca entegrasyonunu kavramak için tasarlanmıştır. Mimari verimliliğe odaklanan bir geliştirici olarak, mevcut sürümdeki darboğazların farkındayım ve bir sonraki aşamada bunları çözmeyi hedefliyorum:[Mevcut] Senkron İşlem Darboğazı: YOLO ve DeepFace şu anda ardışık (serial) bir şekilde çalışmaktadır. Gerçek zamanlı video işleme senaryolarında, bu senkron model çıkarımı (inference) darboğazları yaratmakta ve genel performansı etkileyerek kare atlamalarına (frame-drop) neden olabilmektedir.Sonraki Adım: Görüntü yakalama, tespit ve analiz süreçlerini birbirinden ayırmak (decouple) için Asenkron İşlem Yönetimi (Multithreading/Multiprocessing) mimarisine geçiş.[Mevcut] Python GIL Kısıtlamaları: Python'un Global Interpreter Lock (GIL) mekanizması, yüksek yük altındaki gerçek zamanlı video işlemlerinde gerçek paralelliği engellemektedir.Sonraki Adım: Python'un I/O darboğazlarını aşmak ve performansı optimize etmek için ana çıkarım motorunu TensorRT (NVIDIA) veya OpenVINO (Intel) gibi donanım hızlandırıcıları kullanarak C++ ortamına taşımak.[Mevcut] Bellek Yönetimi: Modellerin VRAM içerisinde sürekli yüklenip boşaltılması, bir watchdog mekanizması olmadan uzun süreli çalışmalarda bellek sızıntısına yol açabilir.Sonraki Adım: 7/24 kesintisiz çalışmalarda 'Out of Memory' (OOM) hatalarını önlemek için katı bir bellek yönetim sistemi ve kalıcı VRAM önbelleklemesi (caching) uygulamak.
